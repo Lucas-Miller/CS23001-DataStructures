@@ -1,0 +1,29 @@
+#include "stack.hpp"
+#include <cassert>
+#include <iostream>
+
+int main() {
+    //Test copy ctor
+        
+    {
+        stack test();
+        test.push_back(1);
+        
+        stack copyTest(test);
+        
+        assert(test.top() == copyTest.top()); 
+    }    
+
+    
+    {
+        stack test();
+        
+        stack copyTest(test);
+        
+        assert(test.top() == copyTest.top()); 
+    } 
+
+
+
+ 
+}

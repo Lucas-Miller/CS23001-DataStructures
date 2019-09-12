@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="foo1.cpp"><comment type="line">//File p-foo.cpp</comment>
+           
+<function><type><name>int</name></type> <name>foo</name><parameter_list>()</parameter_list> <block>{ 
+    <decl_stmt><decl><type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+    <expr_stmt><expr><name>i</name> = 0</expr>;</expr_stmt>           
+    <return>return <expr><name>i</name></expr>;</return>
+}</block></function>
+</unit>

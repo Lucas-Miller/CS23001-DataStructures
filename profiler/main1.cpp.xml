@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<unit xmlns="http://www.sdml.info/srcML/src" xmlns:cpp="http://www.sdml.info/srcML/cpp" language="C++" filename="main1.cpp"><cpp:include>#<cpp:directive>include</cpp:directive> <cpp:file>&lt;iostream&gt;</cpp:file></cpp:include>
+           
+<function><type><name>int</name></type> <name>main</name><parameter_list>()</parameter_list> <block>{  
+    <decl_stmt><decl><type><name>int</name></type> <name>i</name></decl>;</decl_stmt>
+    <expr_stmt><expr><name>i</name> = 0</expr>;</expr_stmt>       
+    <while>while <condition>(<expr><name>i</name> &lt; 10</expr>)</condition> <block>{    
+        <expr_stmt><expr>++<name>i</name></expr>;</expr_stmt>
+        <expr_stmt><expr><name><name>std</name>::<name>cout</name></name> &lt;&lt; <name>i</name></expr>;</expr_stmt>    
+    }</block></while>
+    <return>return <expr>0</expr>;</return>
+}</block></function> 
+</unit>

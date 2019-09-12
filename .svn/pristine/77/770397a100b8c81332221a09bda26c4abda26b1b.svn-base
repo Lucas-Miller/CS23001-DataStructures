@@ -1,0 +1,142 @@
+// Lucas Miller
+// Implementation file for bigint project
+// CS23001
+
+#include "bigint.hpp"
+
+void bigint::zero(){    // Method to initialize a bigint to all 0
+    for(int i = 0; i < CAPACITY; ++i)
+        digitArray[i] = 0;
+}
+
+bool bigint::operator==(const bigint& rhs){ // == Operator overload to allow bigint comparison
+    bool isEqual = true;
+    for(int i = 0; i < CAPACITY; ++i){
+        if(digitArray[i] == rhs.digitArray[i])
+            isEqual = true;
+        else
+            return false;
+    }
+    return isEqual;
+}
+
+bigint bigint::operator+(bigint rhs) const{ // + Operator overload to allow bigint + bigint
+    int num = 0;
+    int temp = 0;
+    
+    for (int i = 0; i < CAPACITY; ++i){
+        num = digitArray[i] + rhs.digitArray[i] + num;
+        temp = num % 10;
+        num = num / 10;
+        rhs.digitArray[i] = temp;
+    }
+    return rhs;
+}
+
+
+bigint bigint::timesDigit(int x) { // Multiplies bigint by a digit x, where x <= 9
+    bigint product = *(this);
+    if(x == 0)
+        return (product = 0);
+    if(x == 1)
+        return product;
+    if(x <= 9){
+        int remainder = 0;
+        int result = 0;
+        for(int i = 0; i < CAPACITY; ++i){
+            remainder = digitArray[i] * x + remainder;
+            result = remainder % 10;
+            remainder /= 10;
+            product.digitArray[i] = result;
+        }
+            
+    }
+    return product;
+}
+
+bigint bigint::times10(int x){ // Multiplies bigint by 10^n where n is > 0
+    bigint temp;
+    if(x == 0){
+        temp = *(this);
+        return temp;
+    }
+
+    if(x > 0)
+        for (int i = CAPACITY - x - 1; i >= 0; --i)
+            temp.digitArray[i + x] = digitArray[i];
+    return temp;
+}
+
+
+int bigint::operator[](int i) const{ // Subscript overload to access the i-th digit (ones, tenths, etc place) 
+    return digitArray[i];
+}
+
+bigint bigint::operator*(bigint rhs){ // Operator overload to allow for bigint * bigint multiplication
+    bigint product;
+    for(int i = 0; i < CAPACITY; ++i)
+        product = product + (timesDigit(rhs.digitArray[i])).times10(i);
+    
+    return product; 
+}
+
+void bigint::debugPrint(std::ostream& out) const{ // A method for printing out each digit with bars between them
+    for(int i = 0; i < (CAPACITY-1); --i)
+        out << "|" << digitArray[i] << "|";
+    out << std::endl;
+}
+
+bigint::bigint(){ // Default Constructor, initializes bigint to zero
+    zero();
+}
+
+bigint::bigint(int num){ // Constructor for initializing a bigint with an int
+    for(int i = 0; i < CAPACITY; ++i){
+        digitArray[i] = num % 10;
+        num = num / 10;
+    }
+}
+
+
+bigint::bigint(const char myChar[]){ // Constructor for initializing a bigint with char[]
+    zero();
+    int arrayLength = 0;
+    int k = 0;
+    
+    while(myChar[arrayLength] != '\0')
+        ++arrayLength;
+    
+    for(int j = arrayLength - 1; j >= 0; j--, k++)
+        digitArray[k] = int(myChar[j]) - int('0');
+}
+
+std::istream& operator>>(std::istream& in, bigint& rhs){ // >> overload to allow input of bigint
+    char ch;
+    char charArray[CAPACITY];
+    
+    for(int j = 0; j < CAPACITY; ++j){
+        charArray[j] = 0;
+    }
+    
+    in >> ch;
+    for(int i = 0; i < CAPACITY && ch != ';'; ++i){
+        charArray[i] = ch;
+        in >> ch;
+    }
+    rhs = charArray;
+    return in;
+}
+
+std::ostream& operator<<(std::ostream& out, bigint rhs){ // << overload to allow outputting bigint
+    int lineControl = CAPACITY;
+    while(lineControl > 0 && rhs.digitArray[lineControl] == 0)
+        --lineControl;
+    while(lineControl >= 0){
+        if(lineControl % 80)
+            out << rhs.digitArray[lineControl];
+        else
+            out << rhs.digitArray[lineControl] << std::endl;
+    --lineControl;
+    }
+    return out;       
+}

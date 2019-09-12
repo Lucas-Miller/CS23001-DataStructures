@@ -1,0 +1,34 @@
+#include "utilities.hpp"
+void toPostfix(std::ifstream& in, std::ostream& out) {
+    stack<String> s;
+    String left, right, op, currentToken;
+    char token[300];
+
+    while (!in.eof()) {
+        in >> token;
+        currentToken = String(token);
+
+        if (in.eof()) {
+            break;
+        }
+
+        if (currentToken == ";") {
+            out << s.top();
+            out << ";";
+            out << std::endl;
+            s = stack<String>();
+        } else if (currentToken == ")") {
+            right = s.pop();
+            op = s.pop();
+            left = s.pop();
+            s.push(left + right + op);
+        } else {
+            if (currentToken != "(") {
+                s.push(currentToken + ' ');
+            }
+        }
+    }
+
+
+}
+

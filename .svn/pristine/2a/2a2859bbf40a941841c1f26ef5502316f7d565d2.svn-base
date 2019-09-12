@@ -1,0 +1,22 @@
+#include "stack.hpp"
+#include <cassert>
+#include <iostream>
+
+int main() {
+    
+    {
+        stack test();
+        test.push(1);
+        
+        stack two();
+        
+        two = test;
+        
+        assert(test.empty() == false);
+        assert(test.top() == 1);
+        
+        assert(two.empty() == false);
+        assert(two.top() == 1);
+    }
+    
+}

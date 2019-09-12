@@ -1,0 +1,49 @@
+#include "bigint.hpp"
+
+void bigint::zero(){
+    for(int i = 0; i < CAPACITY; ++i)
+        digitArray[i] = 0;
+}
+
+bool bigint::operator==(const bigint& rhs){
+    bool isEqual = true;
+    for(int i = 0; i < CAPACITY; ++i){
+        if(digitArray[i] == rhs.digitArray[i])
+            isEqual = true;
+        else
+            return false;
+    }
+    return isEqual;
+}
+
+void bigint::debugPrint(std::ostream& out) const{
+    for(int i = 0; i < (CAPACITY-1); --i){
+        out << "|" << digitArray[i] << "|";
+    }
+    out << std::endl;
+}
+
+bigint::bigint(){
+    zero();
+}
+
+bigint::bigint(int num){
+    for(int i = 0; i < CAPACITY; ++i){
+        digitArray[i] = num % 10;
+        num = num / 10;
+    }
+}
+
+std::ostream& operator<<(std::ostream& out, bigint rhs){
+    int lineControl = CAPACITY;
+    while(lineControl > 0 && rhs.digitArray[lineControl] == 0)
+        --lineControl;
+    while(lineControl >= 0){
+        if(lineControl % 80)
+            out << rhs.digitArray[lineControl];
+        else
+            out << rhs.digitArray[lineControl] << std::endl;
+    --lineControl;
+    }
+    return out;       
+}

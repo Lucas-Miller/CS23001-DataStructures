@@ -1,0 +1,51 @@
+#include "bigint.hpp"
+
+bigint::bigint() {
+    for(int i = 0; i < BIGINT_SIZE; ++i) {
+        digitArray[i] = 0;
+    }
+}
+
+bigint::bigint(int num) {
+
+}
+
+bool bigint::operator == (int rhs) const {
+    for (int i = 0; rhs != 0; ++i) {
+        if (digitArray[i] != rhs % 10) 
+            return false;
+        rhs /= 10;
+    }
+    return true;
+}
+
+void bigint::debugPrint() {
+    for(int i = 0; i < BIGINT_SIZE; ++i)
+        std::cout << digitArray[i];
+    std::cout << std::endl;
+}
+
+void bigint::output(std::ostream& outStream) const
+{
+    int bigNumI = BIGINT_SIZE;
+    int outPutI = 0;
+
+    while(digitArray[bigNumI] == 0)
+        --bigNumI;
+
+    while (bigNumI >= 0) {
+        if(outPutI % 80)
+            outStream << digitArray[bigNumI];
+        else
+            outStream << std::endl << digitArray[bigNumI];
+
+        --bigNumI;
+        ++outPutI;
+    }
+}
+
+
+std::ostream& operator<< (std::ostream& outStream, bigint& bigNum) {
+    bigNum.output(outStream);
+    return outStream;    
+}

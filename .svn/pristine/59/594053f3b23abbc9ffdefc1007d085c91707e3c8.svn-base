@@ -1,0 +1,118 @@
+//Implementation file for bigint project
+//Lucas Miller
+//Kent State University
+
+#include "bigint.hpp"
+
+void bigint::zero(){
+    for(int i = 0; i < CAPACITY; ++i)
+        digitArray[i] = 0;
+}
+
+bool bigint::operator==(const bigint& rhs){
+    bool isEqual = true;
+    for(int i = 0; i < CAPACITY; ++i){
+        if(digitArray[i] == rhs.digitArray[i])
+            isEqual = true;
+        else
+            return false;
+    }
+    return isEqual;
+}
+
+bigint bigint::operator+(bigint rhs) const{ 
+    int num = 0;
+    int temp = 0;
+    
+    for (int i = 0; i < CAPACITY; ++i){
+        num = digitArray[i] + rhs.digitArray[i] + num;
+        temp = num % 10;
+        num = num / 10;
+        rhs.digitArray[i] = temp;
+    }
+    return rhs;
+}
+
+bigint bigint::integerMultiply(int x){
+    bigint product;
+    int remainder = 0;
+    int result;
+    if(x < 10){
+        for(int i = 0; i < CAPACITY; ++i){
+            remainder = digitArray[i] * x + remainder;
+            result = remainder % 10;
+            remainder = remainder / 10;
+            product.digitArray[i] = result;
+            return product;
+        }
+    
+    
+    }
+    
+    
+    if(x >= 10){
+        for(int i = (CAPACITY - 1 - x); i >= 0; ++i)
+            product.digitArray[i + x] = digitArray[i];
+        
+        //for(int j = 0; j < x; ++j)
+            //product.digitArray[j] = 0;
+        return product;
+    }
+    
+    //return product;
+}
+
+
+bigint bigint::operator*(bigint rhs){
+    bigint product = 0;
+    for(int i = 0; i < CAPACITY; ++i){
+        product = product + (integerMultiply(rhs.digitArray[i]));    
+    }
+    return product;
+    
+}
+
+void bigint::debugPrint(std::ostream& out) const{
+    for(int i = 0; i < (CAPACITY-1); --i){
+        out << "|" << digitArray[i] << "|";
+    }
+    out << std::endl;
+}
+
+bigint::bigint(){
+    zero();
+}
+
+bigint::bigint(int num){
+    for(int i = 0; i < CAPACITY; ++i){
+        digitArray[i] = num % 10;
+        num = num / 10;
+    }
+}
+
+bigint::bigint(const char myChar[]){
+    zero();
+    int arrayLength = 0;
+    int k = 0;
+    
+    while(myChar[arrayLength] != '\0')
+        ++arrayLength;
+    
+    for(int j = arrayLength - 1; j >= 0; j--, k++)
+        digitArray[k] = int(myChar[j]) - int('0');
+}
+
+
+std::ostream& operator<<(std::ostream& out, bigint rhs){
+    int lineControl = CAPACITY;
+    while(lineControl > 0 && rhs.digitArray[lineControl] == 0)
+        --lineControl;
+    while(lineControl >= 0){
+        if(lineControl % 80)
+            out << rhs.digitArray[lineControl];
+        else
+            out << rhs.digitArray[lineControl] << std::endl;
+    --lineControl;
+    }
+    return out;       
+}

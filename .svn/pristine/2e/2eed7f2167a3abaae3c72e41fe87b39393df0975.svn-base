@@ -1,0 +1,312 @@
+#include "string.hpp"
+
+String::String() {
+    stringSize = 1;
+    str = new char[stringSize];
+    str[0] = 0; 
+}
+
+String::String(char ch){
+    stringSize = 2;
+    str = new char[stringSize];
+    str[0] = ch;
+    str[1] = 0;
+}
+
+String::String(int num){
+    stringSize = num + 1;
+    str = new char[stringSize];
+    str[stringSize] = 0;
+}
+
+String::String(const char chArray[]){
+
+    int i = 0;
+    while(chArray[i] !=0)
+        ++i;
+    stringSize = i + 1;
+    str = new char[stringSize];
+    
+    i = 0;
+    while(chArray[i] != 0){
+        str[i] = chArray[i];
+        ++i;
+        if(i >= stringSize)
+            break;
+    }
+    str[i] = 0;
+}
+
+String::String(const String& rhs){
+    stringSize = rhs.stringSize;
+    str = new char[stringSize];
+    for(int i = 0; i < stringSize; ++i)
+        str[i] = rhs.str[i];
+}
+
+String::String(int capacity, const char myArray[]){
+    stringSize = capacity + 1;
+    str = new char[stringSize];
+    //stringSize = capacity + 1;
+    for(int i = 0; i < stringSize; ++i){
+        //if(myArray[i] == 0) break;  
+        str[i] = myArray[i];    
+    }
+}
+
+String::~String(){
+    stringSize = 0;
+    delete[] str;
+    str = nullptr;
+}
+
+
+
+void String::swap(String& rhs){
+    char * temp = str;
+    str = rhs.str;
+    rhs.str = temp;
+    
+    int tempSize = stringSize;
+    stringSize = rhs.stringSize;
+    rhs.stringSize = tempSize;
+    
+}
+
+
+
+void String::resetCapacity(int size){
+    char temp[size];
+    for(int i = 0; i < stringSize; ++i)
+        temp[i] = str[i];
+    
+    delete[] str;
+    stringSize = size;
+    str = new char[stringSize];
+    for(int i = 0; i < stringSize; ++i)
+        str[i] = temp[i];
+    
+}
+
+String& String::operator=(String rhs){
+    swap(rhs);
+    return *this; 
+}
+
+
+int String::length() const {
+    int result = 0;
+    while(str[result] != 0)
+        ++result;
+    
+    return result;
+}
+
+/*
+String String::operator+(const String& rhs) const{
+    int i = length();
+    String result(i + rhs.stringSize + 1, str);
+            
+    for (int j = 0; rhs[j] != 0; ++i, ++j){
+        result[i] = rhs[j];
+    }
+            
+    return result;
+}
+*/
+
+
+
+
+
+String String::operator+(const String& rhs) const{
+  int offset = length();
+  String result(offset + rhs.length() + 1, str);
+
+  for(int i = 0; rhs[i] != 0; ++offset, ++i){
+    result[offset] = rhs[i];
+  }
+    
+  return result;
+}
+
+
+String operator+(char lhs, const String &rhs){ return String(lhs) + rhs;};
+
+String operator+(const char lhs[], const String& rhs){ return String(lhs) + rhs;};
+
+String& String::operator+=(const String& rhs){
+    int offset = length();
+    int i = 0;
+    
+    while(rhs.str[i] != 0){
+        if(offset + i == stringSize)
+            break;
+        str[offset + i] = rhs.str[i];
+        ++i;
+    }
+    str[offset + i] = 0;
+    return *(this);
+}
+
+char String::operator[](int i) const {
+    return str[i];
+}
+
+char& String::operator[](int i) {
+    return str[i];
+}
+
+bool String::operator<(const String& rhs) const{
+    int i = 0;
+    while(str[i] != 0 && rhs.str[i] != 0 && str[i] == rhs.str[i])
+        ++i;
+    return str[i] < rhs.str[i];
+}
+
+bool operator==(char lhs, const String& rhs){ return String(lhs) == rhs;};
+bool operator==(const char lhs[], const String& rhs){return String(lhs) == rhs;};
+
+
+bool String::operator==(const String& rhs) const {
+    int i = 0;
+    while((str[i] != 0) && (str[i] == rhs.str[i]))
+        ++i;
+    return str[i] == rhs.str[i];
+}
+
+
+std::ostream& operator<<(std::ostream& out, const String& rhs){
+    int i = 0;
+    while(rhs.str[i] != 0){
+        out << rhs.str[i];
+        ++i;
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, String& rhs){
+    int buffSize = 0;
+    char buff[buffSize];
+    if(!in.eof()){
+        in >> buff;
+        rhs = String(buff);
+        ++buffSize;
+    }
+    else{
+        rhs = String();
+        //Maybe add buff increment here??
+    }
+    return in;
+}
+
+String String::substr(int start, int end) const{
+    if(start < 0)
+        start = 0;
+    if(end < 0)
+        return "";
+    if(start >= length())
+        return "";
+    if(end >= length())
+        end = length() - 1;
+    if(start > end)
+        return "";
+    
+    String result;
+    for(int i = start; i < end; ++i){
+        result += str[i];
+    }
+    return result;
+    
+}
+
+
+int String::findch(int start, char ch) const{
+    String temp = substr(start, length());
+    int firstOccurence = -1;
+            
+    for (int i = 0; i < length(); ++i) {
+        if (temp[i] == ch) {
+            return firstOccurence = i + start;
+        }
+    }
+            
+    return firstOccurence;
+}
+
+bool operator>(const String& lhs, const String& rhs) {
+
+    if(!(lhs < rhs) && !(lhs == rhs))
+        return true;
+    else
+        return false;
+}
+
+bool operator<=(const String& lhs, const String& rhs) {
+    if(((lhs < rhs) || (lhs == rhs)) && !(lhs > rhs))
+        return true;
+    else
+        return false;
+}
+
+bool operator>=(const String& lhs, const String& rhs) {
+    if(((lhs > rhs) || (lhs == rhs)) && !(lhs < rhs))
+        return true;
+    else
+        return false;
+}
+
+
+bool operator!=(const String& lhs, const String& rhs) {
+    if((lhs > rhs) || (lhs < rhs))
+        return true;
+    else
+        return false;
+}
+
+
+bool operator<(const char lhs[], const String& rhs){
+    if(String(lhs) < rhs)
+         return true;
+    else
+        return false;
+}
+
+bool operator<(char ch, const String& rhs){
+    if(String(ch) < rhs)
+        return true;
+    else
+        return false;
+}
+
+
+
+int String::capacity() const{
+    return stringSize - 1;
+}
+
+int String::findstr(int pos, const String& rhs) const {
+    String temp = substr(pos, length());
+    char lookingFor = rhs[0];
+    int foundAt = 0;
+    for(int i = 0; i < temp.length(); ++i){
+        if(temp[i] != lookingFor){
+            foundAt = -1;
+            ++i;
+        }
+    
+        if(temp[i] == lookingFor){ 
+            foundAt = i;
+            break;
+        }
+    }
+    for(int j = foundAt; j < rhs.length(); ++j)
+        if(temp[j] != rhs[j - foundAt])
+            foundAt = -1;
+
+    return foundAt;
+
+}
+
+
+

@@ -1,0 +1,431 @@
+#include "string.hpp"
+
+String::String() {
+    stringSize = 1;
+    str = new char[stringSize];
+    str[0] = 0; 
+}
+
+String::String(char ch){
+    stringSize = 2;
+    str = new char[stringSize];
+    str[0] = ch;
+    str[1] = 0;
+}
+
+String::String(int num){
+    stringSize = num + 1;
+    str = new char[stringSize];
+    str[stringSize] = 0;
+}
+
+
+String::String(const char chArray[]){
+    int i = 0;
+    while(chArray[i] != 0)
+        ++i;
+     
+    stringSize = i + 1;
+    str = new char[stringSize];
+    
+    i = 0; 
+    while(chArray[i] != 0){
+        str[i] = chArray[i];
+        ++i;
+        if(i >= stringSize)
+            break;
+    }
+    str[stringSize - 1] = 0;
+    
+}
+
+
+
+/*
+String::String(const char chArray[]){
+
+    int i = 0;
+    while(chArray[i] !=0)
+        ++i;
+    stringSize = i + 1;
+    str = new char[stringSize];
+    
+    i = 0;
+    while(chArray[i] != 0){
+        str[i] = chArray[i];
+        ++i;
+        if(i >= stringSize)
+            break;
+    }
+    str[i] = 0;
+}
+
+
+*/
+
+String::String(const String& rhs){
+    stringSize = rhs.stringSize;
+    str = new char[stringSize];
+    for(int i = 0; i <= stringSize; ++i)
+        str[i] = rhs.str[i];
+}
+
+String::String(int capacity, const char myArray[]){  
+    stringSize = capacity + 1;
+    str = new char[stringSize];
+    //stringSize = capacity + 1;
+    for(int i = 0; i < stringSize; ++i){
+        //if(myArray[i] == 0) break;  
+        str[i] = myArray[i];    
+    }
+    
+}
+
+String::~String(){
+    stringSize = 0;
+    delete[] str;
+    str = nullptr;
+}
+
+
+
+void String::swap(String& rhs){
+    char * temp = str;
+    str = rhs.str;
+    rhs.str = temp;
+    
+    int tempSize = stringSize;
+    stringSize = rhs.stringSize;
+    rhs.stringSize = tempSize;
+    
+}
+
+
+
+void String::resetCapacity(int size){
+    char temp[size];
+    for(int i = 0; i < stringSize; ++i)
+        temp[i] = str[i];
+    
+    delete[] str;
+    stringSize = size;
+    str = new char[stringSize];
+    for(int i = 0; i < stringSize; ++i)
+        str[i] = temp[i];
+    
+}
+
+String& String::operator=(String rhs){
+    swap(rhs);
+    return *this; 
+}
+
+
+int String::length() const {
+    int length = 0;
+    while(str[length] != 0)
+        ++length;
+    
+    return length;
+}
+
+
+
+
+int String::capacity() const{
+    return stringSize - 1;
+}
+
+
+
+
+/*
+String String::operator+(const String& rhs) const{
+    int i = length();
+    String result(i + rhs.stringSize + 1, str);
+            
+    for (int j = 0; rhs[j] != 0; ++i, ++j){
+        result[i] = rhs[j];
+    }
+            
+    return result;
+}
+*/
+
+
+
+String String::operator+(const String& rhs)const{
+    String result(this->length()+rhs.length()+1);
+    for (int j=0; j<length(); ++j){
+        result.str[j]=str[j];
+    }
+    int len=length();
+    int i=0;
+    while((rhs.str[i]!=0) && (i + len < rhs.length()+length())){
+        result.str[len+i]=rhs.str[i];
+        ++i;
+    }
+    result.str[len +i]=0;
+    return result;
+}
+
+
+
+/*
+String String::operator+(const String& rhs) const{
+    int offset = length();
+    int actualOffset = offset + rhs.length();
+    String result(offset + rhs.length(), str);
+
+    for(int i = 0; rhs[i] != 0; ++offset, ++i){
+        if(rhs.str[0] == 0)
+            return *this;
+        if(str[0] == 0)
+            return rhs;
+        result[actualOffset + i + 1] = rhs[i];
+    }
+        //result[stringSize] = 0;
+    
+    return result;
+}
+*/
+
+String operator+(char lhs, const String &rhs){ return String(lhs) + rhs;};
+
+String operator+(const char lhs[], const String& rhs){ return String(lhs) + rhs;};
+
+String& String::operator+=(const String& rhs){
+    int offset = length();
+    int i = 0;
+    
+    while(rhs.str[i] != 0){
+        if(offset + i == stringSize)
+            break;
+        str[offset + i] = rhs.str[i];
+        ++i;
+    }
+    str[offset + i] = 0;
+    return *(this);
+}
+
+char String::operator[](int i) const {
+    return str[i];
+}
+
+char& String::operator[](int i) {
+    return str[i];
+}
+
+bool String::operator<(const String& rhs) const{
+    int i = 0;
+    while(str[i] != 0 && rhs.str[i] != 0 && str[i] == rhs.str[i])
+        ++i;
+    return str[i] < rhs.str[i];
+}
+
+bool operator==(char lhs, const String& rhs){ return String(lhs) == rhs;};
+bool operator==(const char lhs[], const String& rhs){return String(lhs) == rhs;};
+
+bool String::operator==(const String& rhs) const {
+    int i = 0;
+    while((str[i] != 0) && (str[i] == rhs.str[i]))
+        ++i;
+    return str[i] == rhs.str[i];
+}
+
+std::ostream& operator<<(std::ostream& out, const String& rhs){
+    int i = 0;
+    while(rhs.str[i] != 0){
+        out << rhs.str[i];
+        ++i;
+    }
+    return out;
+}
+
+std::istream& operator>>(std::istream& in, String& rhs){
+    int buffSize = 0;
+    char buff[buffSize];
+    if(!in.eof()){
+        in >> buff;
+        rhs = String(buff);
+        ++buffSize;
+    }
+    else{
+        rhs = String();
+        //Maybe add buff increment here??
+    }
+    return in;
+}
+
+
+/*
+
+String String::substr(int left, int right) const{
+    if (right < 0 || right > length())
+        right = length();
+    if(left == right && right == left){
+        return String(str[left]);
+    }
+    if(left == 0 && right == 0){
+        
+    }
+    if (left == 0) {
+        String result = *this; 
+        result.resetCapacity(right + 1);
+        return result;
+    }
+    else {
+        int size = (right - left) + 1;
+        String temp(size);
+        for(int i = left; i <= right; ++i){
+            temp.str[i - left] = str[i];
+            std::cout << "Temp: " << temp << std::endl;
+        }
+        return temp;
+    }
+}
+*/
+
+
+
+String String::substr(int left, int right) const{
+    if(left == right){
+        return String(str[left]);
+    }
+    if (left == 0) {
+        String result = *this; 
+        result.resetCapacity(right + 1);
+        return result;
+    }
+    int size = (right - left) + 1;
+    String temp(size);
+    if((right - left) == 1){
+        temp[0] = str[left];
+        temp[1] = str[right];
+        temp[2] = 0;
+    }
+    else { 
+        for(int i = left; i <= right; ++i){
+            temp.str[i - left] = str[i]; 
+        }
+    }
+    return temp;
+}
+
+
+/*
+String String::substr(int left, int right) const{
+    //if (right < 0 || right > length())
+        //right = length();
+    if(left == right && right == left){
+        return String(str[left]);
+    }
+    if (left == 0) {
+        String result = *this; 
+        result.resetCapacity(right + 1);
+        return result;
+    }
+    else {
+        int size = (right - left) + 1;
+        char temp[size];
+        for(int i = left; i <= right; ++i){
+            //char temp[size];
+            temp[i - left] = str[i];
+            std::cout << "Temp: " << temp << std::endl;
+    }
+        return String(size, temp);
+    }
+}
+*/
+
+int String::findch(int start, char ch) const{
+    for (int i = start; i <= length(); ++i) {
+        String temp = substr(start, length());
+        if(temp[0] == ch)
+            return start; 
+        if (temp[i] == ch) {
+            return i + start;
+        }
+    
+    }
+    return -1;
+}
+            
+
+
+bool operator>(const String& lhs, const String& rhs) {
+
+    if(!(lhs < rhs) && !(lhs == rhs))
+        return true;
+    else
+        return false;
+}
+
+bool operator<=(const String& lhs, const String& rhs) {
+    if(((lhs < rhs) || (lhs == rhs)) && !(lhs > rhs))
+        return true;
+    else
+        return false;
+}
+
+bool operator>=(const String& lhs, const String& rhs) {
+    if(((lhs > rhs) || (lhs == rhs)) && !(lhs < rhs))
+        return true;
+    else
+        return false;
+}
+
+
+bool operator!=(const String& lhs, const String& rhs) {
+    if((lhs > rhs) || (lhs < rhs))
+        return true;
+    else
+        return false;
+}
+
+
+bool operator<(const char lhs[], const String& rhs){
+    if(String(lhs) < rhs)
+         return true;
+    else
+        return false;
+}
+
+bool operator<(char ch, const String& rhs){
+    if(String(ch) < rhs)
+        return true;
+    else
+        return false;
+}
+
+
+
+//int String::capacity() const{
+//    return stringSize - 1;
+//}
+
+int String::findstr(int pos, const String& rhs) const {
+    String temp = substr(pos, length());
+    char lookingFor = rhs[0];
+    int foundAt = 0;
+    for(int i = 0; i < temp.length(); ++i){
+        if(temp[i] != lookingFor){
+            foundAt = -1;
+            ++i;
+        }
+    
+        if(temp[i] == lookingFor){ 
+            foundAt = i;
+            break;
+        }
+    }
+    for(int j = foundAt; j < rhs.length(); ++j)
+        if(temp[j] != rhs[j - foundAt])
+            foundAt = -1;
+
+    return foundAt;
+
+}
+
+
+

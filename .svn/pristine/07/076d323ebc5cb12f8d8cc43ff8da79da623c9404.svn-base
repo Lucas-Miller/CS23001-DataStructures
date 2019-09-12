@@ -1,0 +1,28 @@
+//Header file for BIGINT Project
+//Lucas Miller
+//Kent State University
+
+#include <iostream>
+
+#ifndef CS2_BIGINT
+#define CS2_BIGINT
+const int CAPACITY = 200;
+ 
+class bigint {
+public:
+    bigint();
+    bigint(int);
+    bigint(const char[]);
+    bool operator==(const bigint&);
+    bigint operator+(bigint) const;
+    bigint operator+=(bigint);
+    bigint operator*(bigint);
+    bigint timesDigit(int) const;
+    bigint times10(int) const;
+    void debugPrint(std::ostream&) const;
+    friend std::ostream& operator<<(std::ostream& out, bigint num);
+private:
+    void zero();
+    int digitArray[CAPACITY];
+};
+#endif

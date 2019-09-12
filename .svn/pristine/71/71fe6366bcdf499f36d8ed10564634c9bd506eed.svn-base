@@ -1,0 +1,16 @@
+#include "stack.hpp"
+#include <cassert>
+#include <iostream>
+
+int main() {
+    //Test Default Ctor
+    {
+        stack<int> test;
+        
+        assert(test.empty() == true);
+    }
+    
+      
+
+ 
+}

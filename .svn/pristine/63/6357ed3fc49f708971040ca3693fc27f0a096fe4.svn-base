@@ -1,0 +1,16 @@
+#include <iostream>
+const int BIGINT_SIZE = 100;
+ 
+class bigint {
+public:
+    bigint();
+    bigint(int);
+    bool operator== (int rhs) const;
+    void debugPrint();
+    //int getDigitArray();
+    void output(std::ostream&) const;
+private:
+    int digitArray[BIGINT_SIZE];
+};
+
+std::ostream& operator<< (std::ostream&, bigint&);

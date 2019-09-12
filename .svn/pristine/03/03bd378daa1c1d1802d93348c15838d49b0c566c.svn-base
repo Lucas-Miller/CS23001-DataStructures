@@ -1,0 +1,108 @@
+//Implementation file for bigint project
+//Lucas Miller
+//Kent State University
+
+#include "bigint.hpp"
+
+void bigint::zero(){
+    for(int i = 0; i < CAPACITY; ++i)
+        digitArray[i] = 0;
+}
+
+bool bigint::operator==(const bigint& rhs){
+    bool isEqual = true;
+    for(int i = 0; i < CAPACITY; ++i){
+        if(digitArray[i] == rhs.digitArray[i])
+            isEqual = true;
+        else
+            return false;
+    }
+    return isEqual;
+}
+
+bigint bigint::operator+(bigint rhs) const{ // Overload the addition operator
+    int num = 0;
+    int temp = 0;
+    
+    for (int i = 0; i < CAPACITY; ++i){
+        num = digitArray[i] + rhs.digitArray[i] + num;
+        temp = num % 10;
+        num = num / 10;
+        rhs.digitArray[i] = temp;
+    }
+    return rhs;
+}
+
+bigint bigint::operator+=(bigint rhs){
+    bigint temp;
+    int num = 0;
+    for(int i = 0, k = 0; i < CAPACITY; ++i){
+        num = digitArray[i] += rhs.digitArray[i];
+        if(num > 9){
+            temp.digitArray[k] = num / 10;
+            temp.digitArray[k + 1] = num % 10;
+            ++k;
+        }
+        else{
+            digitArray[k] = num;
+            ++k;
+        }
+    }
+    return temp;
+}
+
+bigint bigint::integerMultiply(int x){
+    bigint product;
+    for(int i = 0; i < x; ++i){
+        product += product;
+    }
+}
+
+bigint bigint::operator*(bigint rhs) {
+    bigint 
+}
+
+void bigint::debugPrint(std::ostream& out) const{
+    for(int i = 0; i < (CAPACITY-1); --i){
+        out << "|" << digitArray[i] << "|";
+    }
+    out << std::endl;
+}
+
+bigint::bigint(){
+    zero();
+}
+
+bigint::bigint(int num){
+    for(int i = 0; i < CAPACITY; ++i){
+        digitArray[i] = num % 10;
+        num = num / 10;
+    }
+}
+
+bigint::bigint(const char myChar[]){
+    zero();
+    int arrayLength = 0;
+    int k = 0;
+    
+    while(myChar[arrayLength] != '\0')
+        ++arrayLength;
+    
+    for(int j = arrayLength - 1; j >= 0; j--, k++)
+        digitArray[k] = int(myChar[j]) - int('0');
+}
+
+
+std::ostream& operator<<(std::ostream& out, bigint rhs){
+    int lineControl = CAPACITY;
+    while(lineControl > 0 && rhs.digitArray[lineControl] == 0)
+        --lineControl;
+    while(lineControl >= 0){
+        if(lineControl % 80)
+            out << rhs.digitArray[lineControl];
+        else
+            out << rhs.digitArray[lineControl] << std::endl;
+    --lineControl;
+    }
+    return out;       
+}

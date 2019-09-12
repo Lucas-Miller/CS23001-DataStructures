@@ -1,0 +1,22 @@
+#include "stack.hpp"
+#include <cassert>
+#include <iostream>
+
+int main() {
+    //Test Default Ctor
+    {
+        stack<int> test;
+        assert(test.empty() == true); 
+    }  
+    
+    
+    {
+        stack<int> test;
+        assert(test.full() == false); 
+    }
+   
+
+
+
+    std::cout << "Done testing Default ctor, Success" << std::endl; 
+}

@@ -1,0 +1,19 @@
+#include "string.hpp"
+#include <cassert>
+
+//tests input
+
+int main() {
+
+    {
+        char x[5] = {'h','e','l','l','o'};
+        String One(x);
+        
+        
+        assert(One == x);
+        
+        
+    }
+
+    std::cout << "Done testing input" << std::endl;
+}

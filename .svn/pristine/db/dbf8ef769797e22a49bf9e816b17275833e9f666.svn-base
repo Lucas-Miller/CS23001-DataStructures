@@ -1,0 +1,12 @@
+
+
+#ifndef CS2_STACK_UTIL
+#define CS2_STACK_UTIL
+#include<iostream>
+#include <fstream>
+#include "../string/string.hpp"
+#include "stack.hpp"
+
+void toPostfix(std::ifstream& in, std::ostream& out); 
+
+#endif

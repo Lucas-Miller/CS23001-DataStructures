@@ -1,0 +1,150 @@
+// Lucas Miller
+// Implementation file for bigint project
+// CS23001
+#include "bigint.hpp"
+
+void bigint::zero(){
+    for(int i = 0; i < CAPACITY; ++i)
+        digitArray[i] = 0;
+}
+
+bool bigint::operator==(const bigint& rhs){
+    bool isEqual = true;
+    for(int i = 0; i < CAPACITY; ++i){
+        if(digitArray[i] == rhs.digitArray[i])
+            isEqual = true;
+        else
+            return false;
+    }
+    return isEqual;
+}
+
+bigint bigint::operator+(bigint rhs) const{ 
+    int num = 0;
+    int temp = 0;
+    
+    for (int i = 0; i < CAPACITY; ++i){
+        num = digitArray[i] + rhs.digitArray[i] + num;
+        temp = num % 10;
+        num = num / 10;
+        rhs.digitArray[i] = temp;
+    }
+    return rhs;
+}
+
+
+bigint bigint::timesDigit(int x) const{
+    bigint product = *(this);
+    const bigint temp = *(this);
+    if(x == 0)
+        return (product = 0);
+    if(x == 1)
+        return product;
+    if(x <= 9){
+        for(int i = 0; i < x - 1; ++i)
+            product = product + temp;
+    }
+    return product;
+}
+
+bigint bigint::times10(int x) const{
+    int result = 0;
+    bigint self = *(this);
+    bigint product = *(this);
+    int temp = 0;
+
+    if(x == 0)
+        return *(this);
+    if(x <= 9 && x != 0){
+        for(int i = 0; i < x; ++i){
+            temp = temp * 10;
+        }
+        result = x * temp;
+    
+    }
+
+    for(int i = 0; i < result; ++i){
+        product = product + self;
+    }
+
+    return *(this);
+}
+
+int bigint::operator[](int i) const{
+    if(i < 0 || i >= CAPACITY)
+        return 0; 
+    return digitArray[i];
+}
+
+bigint bigint::operator*(bigint rhs){
+    bigint product = 0;
+    //bigint temp = 0;
+    for(int i = 0; i < CAPACITY - 1; ++i){
+        product = product + ((timesDigit((rhs.digitArray[i])) * times10(i)));
+        //temp = timesDigit(rhs.digitArray[i]);
+        //product = product + temp.times10(i);
+    }
+    return product; 
+}
+
+void bigint::debugPrint(std::ostream& out) const{
+    for(int i = 0; i < (CAPACITY-1); --i){
+        out << "|" << digitArray[i] << "|";
+    }
+    out << std::endl;
+}
+
+bigint::bigint(){
+    zero();
+}
+
+bigint::bigint(int num){
+    for(int i = 0; i < CAPACITY; ++i){
+        digitArray[i] = num % 10;
+        num = num / 10;
+    }
+}
+
+
+bigint::bigint(const char myChar[]){
+    zero();
+    int arrayLength = 0;
+    int k = 0;
+    
+    while(myChar[arrayLength] != '\0')
+        ++arrayLength;
+    
+    for(int j = arrayLength - 1; j >= 0; j--, k++)
+        digitArray[k] = int(myChar[j]) - int('0');
+}
+
+std::istream& operator>>(std::istream& in, bigint& rhs){
+    char ch;
+    char charArray[CAPACITY];
+    
+    for(int j = 0; j < CAPACITY; ++j){
+        charArray[j] = 0;
+    }
+    
+    in >> ch;
+    for(int i = 0; i < CAPACITY && ch != ';'; ++i){
+        charArray[i] = ch;
+        in >> ch;
+    }
+    rhs = charArray;
+    return in;
+}
+
+std::ostream& operator<<(std::ostream& out, bigint rhs){
+    int lineControl = CAPACITY;
+    while(lineControl > 0 && rhs.digitArray[lineControl] == 0)
+        --lineControl;
+    while(lineControl >= 0){
+        if(lineControl % 80)
+            out << rhs.digitArray[lineControl];
+        else
+            out << rhs.digitArray[lineControl] << std::endl;
+    --lineControl;
+    }
+    return out;       
+}

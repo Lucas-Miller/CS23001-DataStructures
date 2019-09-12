@@ -1,0 +1,17 @@
+part 1: 75
+	-not all tests are committed
+	-not all functions implemented
+	-finish the remaining portion of milestone 1 and request a regrade
+
+part 2: 88
+	-oracles fail for concat, findch, findstr, substr
+
+part 3: 90[regrade]
+	//-fails oracle test for split
+	//-no test_split.cpp
+	//-request regrade when these are addressed
+
+part 4: 85[regrade]
+	//-logview fails to compile
+	//-request regrade once errors are fixed
+	-not all output is correct for all log files

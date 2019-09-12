@@ -1,0 +1,10 @@
+part 1: 100
+	-good job
+
+part 2: 100
+	-good job
+
+part 3: 75
+	-output should match example output on assigment page
+	-toAssembler function should not have any ( or ) as output, make sure you are passing your postfix output to it
+	-request a regrade when fixes are committed
